@@ -64,7 +64,7 @@ jobs:
       packages: write
     steps:
       - name: Build & Push Docker
-        uses: ./.github/actions/build-push-docker
+        uses: davidslusser/actions_docker_github@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           image-name: ${{ github.repository }}
@@ -73,7 +73,7 @@ jobs:
 ### 2. Build multi-platform images with caching
 ```yaml
 - name: Build & Push Multi-Platform
-  uses: ./.github/actions/build-push-docker
+  uses: davidslusser/actions_docker_github@main
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     image-name: my-org/my-app
