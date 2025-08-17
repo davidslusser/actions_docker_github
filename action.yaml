@@ -42,10 +42,36 @@ runs:
         echo "Received tag: '${{ inputs.tag }}'"
         echo "Registry: '${{ inputs.registry }}'"
         echo "Image name: '${{ inputs.image-name }}'"
+        echo "Context: '${{ inputs.context }}'"
+        echo "Dockerfile: '${{ inputs.dockerfile }}'"
         if [ -z "${{ inputs.tag }}" ]; then
           echo "ERROR: tag input is empty!"
           exit 1
         fi
+
+    - name: Check Dockerfile exists
+      shell: bash
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Files in current directory:"
+        ls -la
+        if [ "${{ inputs.context }}" != "." ]; then
+          echo "Files in context directory '${{ inputs.context }}':"
+          ls -la "${{ inputs.context }}" || echo "Context directory does not exist"
+        fi
+        
+        dockerfile_path="${{ inputs.context }}/${{ inputs.dockerfile }}"
+        if [ "${{ inputs.context }}" = "." ]; then
+          dockerfile_path="${{ inputs.dockerfile }}"
+        fi
+        
+        echo "Looking for Dockerfile at: $dockerfile_path"
+        if [ ! -f "$dockerfile_path" ]; then
+          echo "ERROR: Dockerfile not found at $dockerfile_path"
+          echo "Please ensure the Dockerfile exists in your repository or specify the correct path using the 'dockerfile' input"
+          exit 1
+        fi
+        echo "Dockerfile found at: $dockerfile_path"
 
     - name: Log in to Docker Registry
       uses: docker/login-action@v3
