@@ -20,6 +20,9 @@ inputs:
     description: "Dockerfile path"
     required: false
     default: "Dockerfile"
+  github-token:
+    description: "GitHub token for authentication"
+    required: true
 
 outputs:
   latest_tag:
@@ -38,7 +41,7 @@ runs:
       with:
         registry: ${{ inputs.registry }}
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ inputs.github-token }}
 
     - name: Determine if latest tag should be used
       id: latest_tag
